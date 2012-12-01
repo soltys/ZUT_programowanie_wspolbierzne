@@ -1,4 +1,4 @@
-programowanie-wspolbierzne
+﻿Programowanie Współbierzne
 ==========================
 
 Programowanie współbierzne, przedmiot obieralny ZUT
