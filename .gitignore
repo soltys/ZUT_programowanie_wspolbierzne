@@ -1,3 +1,4 @@
+.metadata/
 *.py[cod]
 
 # C extensions

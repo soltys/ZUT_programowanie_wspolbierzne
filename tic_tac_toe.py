@@ -10,7 +10,6 @@ board = [0] * 9
 
 def print_board(board):
     print ''
-    print '---'
     for i in xrange(9):
         if not i==0 and i % 3 == 0:
             print ''
@@ -79,7 +78,17 @@ def get_player_number(name):
         return 1
     if name == 'X':
         return 2
-
+def get_enemy_number(name):
+    if name == 'X':
+        return 1
+    if name == 'O':
+        return 2
+def get_enemy_name(name):
+    if name == 'X':
+        return 'O'
+    if name == 'O':
+        return 'X'
+    
 def player_locked_work(name):
     #print name, " now working"
     global board
@@ -97,7 +106,19 @@ def player_locked_work(name):
     if len(wining_moves) > 0:
         make_move(board, wining_moves[0]['index'], name)
         return
-        
+       
+    enemy_moves = []
+    for i in xrange(9):
+        if board[i] == 0:
+            board_copy = deepcopy(board)
+            make_move(board_copy,i,get_enemy_name(name))
+            enemy_moves.append({'index':i, 'result':end_game(board_copy)})
+    
+    not_loose_moves = [x for x in enemy_moves if x['result'] == get_enemy_number(name)]
+    if len(not_loose_moves) > 0:
+        make_move(board, not_loose_moves[0]['index'], name)
+        return
+    
     nothing_moves = [x for x in moves if x['result'] == 0]
     if len(nothing_moves) > 0:
         make_move(board, nothing_moves[random.randint(0,len(nothing_moves)-1)]['index'], name)
@@ -120,9 +141,10 @@ def player_work(name):
     while end_game(board) == 0:
         if current_player == name:
             with player_lock:
-                player_locked_work(name)
                 print ''
                 print "Gracz" , name, " wykonuje ruch"
+                player_locked_work(name)
+                
                 print_board(board)
                 change_player()             
 
@@ -136,4 +158,10 @@ if __name__ == "__main__":
     #print "main thread awaits"
     wait_thread()
     print ''
-    print "done"
+    if end_game(board) == -1:
+        print "Wynik: remis!"
+    if end_game(board) == 1:
+        print "Wynik: wygrał O!"
+    if end_game(board) == 2:
+        print "Wynik: wygrał X!"    
+    
