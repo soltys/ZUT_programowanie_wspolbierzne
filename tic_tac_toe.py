@@ -100,7 +100,6 @@ def player_locked_work(name):
             moves.append({'index':i, 'result':end_game(board_copy)})
     
     player_number = get_player_number(name)
-### Dodać obronę przed przeciwnikiem, sprawdzić wszystkie ruchy dla przeciwnika i sprawdzić czy któryś prowadzi do wygranej, i tam postawić swój ruch
     
     wining_moves = [x for x in moves if x['result'] == player_number]
     if len(wining_moves) > 0:
@@ -119,8 +118,13 @@ def player_locked_work(name):
         make_move(board, not_loose_moves[0]['index'], name)
         return
     
+    middle_move = [x for x in moves if x['index'] == 4 and x['result'] == 0]    
+    if len(middle_move) > 0:        
+        make_move(board, middle_move[0]['index'], name)
+        return
+    
     nothing_moves = [x for x in moves if x['result'] == 0]
-    if len(nothing_moves) > 0:
+    if len(nothing_moves) > 0:        
         make_move(board, nothing_moves[random.randint(0,len(nothing_moves)-1)]['index'], name)
         return
         
